@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome screen</title>
+      <!-- Load jatos -->
+    <script src="jatos.js"></script>
+
+      <!-- Load libraries -->
+  <script src="https://static.psyact.org/jspsych-7.3.1/jspsych.js"></script>
+
+
+    <script src="https://static.psyact.org/jspsych-7.3.1/jspsych.js"></script>
+    <script src="./js/append_data_to_jatos.js"></script>
+    <script src="https://static.psyact.org/jspsych-7.3.1/plugins/plugin-html-button-response.js"></script>
+    <script src="https://static.psyact.org/jspsych-7.3.1/plugins/plugin-html-keyboard-response.js"></script>
+        <!-- Load jsPsych plug-ins -->
+    <script src="./js/plugin-spatial-recall.js"></script>
+    <script src="./js/plugin-screen-checker.js"></script>
+    <script src="https://static.psyact.org/jspsych-7.3.1/plugins/plugin-instructions.js"></script>
+    <script src="https://static.psyact.org/jspsych-7.3.1/plugins/plugin-html-button-response.js"></script>
+    <script src="https://static.psyact.org/jspsych-7.3.1/plugins/plugin-html-keyboard-response.js"></script>
+
+    <!-- Load CSS styles -->
+    <link href="https://static.psyact.org/jspsych-7.3.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+
+    </head>
+    <body></body>
+    <script>
+      //this page buffers between consent form and the questionnaires
+
+      /* initialize jsPsych */
+      var jsPsych = initJsPsych({
+        on_trial_start: jatos.addAbortButton,
+        // on_finish: () => jatos.endStudy(jsPsych.data.get().json())
+        on_finish: () => jatos.endStudyAndRedirect("https://brown.co1.qualtrics.com/jfe/form/SV_4VmAWNCgNg9eO90?APPID=" +jatos.urlQueryParameters.APPID+ "&STUDYID=" + jatos.urlQueryParameters.STUDYID+ "", jsPsych.data.get().json())
+      });
+
+  //   var jsPsych = initJsPsych({
+  //     // on_trial_start: jatos.addAbortButton,
+  //     on_trial_finish: function (data) {
+  //       // save data after each trial
+  //       let trial_data_save = jsPsych.data.get().last(1).json();
+  //       append_data_to_jatos(trial_data_save); //adds data to server as the trial goes!!
+  //     },
+  //     //on_finish: () => jatos.endStudy(jsPsych.data.get().json())
+  //     on_finish: () => jatos.startNextComponent()
+  //   });
+  //   jsPsych.data.addProperties({ start_time: (new Date()).toISOString(),
+  //     app_id: jatos.urlQueryParameters.APPID,
+  //     study_id: jatos.urlQueryParameters.STUDYID
+  // }); //start time logged in every trial of same experiment
+    var timeline = [];/* create timeline */
+
+    /* define welcome message trial */
+    var welcome = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+
+    /////////////////// Practice trials //////////////////
+
+    var practice_trial1 = {
+      timeline: [
+        {
+          type: jsPsychScreenCheck,
+          min_width: 258,
+          min_height: 364
+        },
+        {
+          type: jsPsychHtmlKeyboardResponse, // this is a fixation cross
+          stimulus: '<p style="font-size: 48px;">+</p>',
+          choices: 'NO_KEYS',
+          trial_duration: 1200,
+        },
+        {
+          type: jsPsychSpatialRecall,
+          grid_size: 4,
+          sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 2),
+          backwards: false
+        },
+        {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function(){
+            if (jsPsych.data.get().last(1).values()[0].score_an == 1) {
+                // console.log(jsPsych.data.get());
+                return '<p>Correct!</p>'
+            } 
+            else {
+                return '<p>Your response was not quite right.</p><p>Press "Continue" below to try again.</p>'
+            }
+        
+        },
+        choices: ['Continue']
+        }
+      ]
+    }
+
+
+    var practice_trial2 = {
+        timeline: [
+          {
+            type: jsPsychScreenCheck,
+            min_width: 258,
+            min_height: 364
+          },
+          {
+            type: jsPsychHtmlKeyboardResponse, // this is a fixation cross
+            stimulus: '<p style="font-size: 48px;">+</p>',
+            choices: 'NO_KEYS',
+            trial_duration: 1200,
+          },
+          {
+            type: jsPsychSpatialRecall,
+            grid_size: 4,
+            sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 2),
+            backwards: false
+          },
+          {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: function(){
+              if (jsPsych.data.get().last(1).values()[0].score_an == 1) {
+                //   console.log(jsPsych.data.get());
+                  return "<p>Correct!</p><p>Now we'll make it a bit more difficult by increasing the number of tiles you need to remember."
+              } 
+              else {
+                  return '<p>Your response was not quite right.</p><p>Press "Continue" below to try again.</p>'
+              }
+          
+          },
+          choices: ['Continue']
+          }
+        ]
+      }
+
+
+      var practice_trial3 = {
+        timeline: [
+          {
+            type: jsPsychScreenCheck,
+            min_width: 258,
+            min_height: 364
+          },
+          {
+            type: jsPsychHtmlKeyboardResponse, // this is a fixation cross
+            stimulus: '<p style="font-size: 48px;">+</p>',
+            choices: 'NO_KEYS',
+            trial_duration: 1200,
+          },
+          {
+            type: jsPsychSpatialRecall,
+            grid_size: 4,
+            sequence: this.jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 3),
+            backwards: false
+          },
+          {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: function(){
+              if (jsPsych.data.get().last(1).values()[0].score_an == 1) {
+                //   console.log(jsPsych.data.get());
+                  return "<p>Correct!</p>"
+              } 
+              else {
+                  return '<p>Your response was not quite right.</p><p>Press "Continue" below to try again.</p>'
+              }
+          
+          },
+          choices: ['Continue']
+          }
+        ]
+      }
+
+      var practice_trial4 = {
+        timeline: [
+          {
+            type: jsPsychScreenCheck,
+            min_width: 258,
+            min_height: 364
+          },
+          {
+            type: jsPsychHtmlKeyboardResponse, // this is a fixation cross
+            stimulus: '<p style="font-size: 48px;">+</p>',
+            choices: 'NO_KEYS',
+            trial_duration: 1200,
+          },
+          {
+            type: jsPsychSpatialRecall,
+            grid_size: 4,
+            sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 3),
+            backwards: false
+          },
+          {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: function(){
+              if (jsPsych.data.get().last(1).values()[0].score_an == 1) {
+                //   console.log(jsPsych.data.get());
+                  return "<p>Correct!</p>"
+              } 
+              else {
+                  return '<p>Your response was not quite right.</p><p>Press "Continue" below to try again.</p>'
+              }
+          
+          },
+          choices: ['Continue']
+          }
+        ]
+      }
+
+    var practice_end_feedback = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: "<p>Well done!<br>You've now completed the practice trials!<br>In the full game, we will gradually increase the difficulty by increasing the number of tiles.<br>Click 'Continue' when you're ready to start the full game.</p>",
+        choices: ['Continue']
+        }
+
+
+    function generate_loop(trial_timeline) {
+        const looped_timeline = {
+            timeline: [trial_timeline],
+            
+            loop_function: function() {
+        
+                // get response data from last practice trial
+                var data = jsPsych.data.get().filter({trial_type: 'spatial-recall'}).last(1).values()[0]; 
+                
+                // check if response was correct. if correct, don't repeat trial.
+                if (data.score_an == 1){ 
+                    return false; 
+                } else { 
+                    return true; 
+                } 
+            }
+            
+        }
+        return looped_timeline
+
+    }
+
+
+
+
+    const practice_timeline = {
+        timeline: [generate_loop(practice_trial1), generate_loop(practice_trial2), 
+            generate_loop(practice_trial3), generate_loop(practice_trial4), practice_end_feedback],
+        // sample: {
+            // type: 'fixed-repetitions',
+            // size: 1
+        // },
+        loop_function: function() {
+
+            // get response data from last practice trial
+            var data = jsPsych.data.get().filter({trial_type: 'spatial-recall'}).last(1).values()[0]; 
+            
+            // check if response was correct. if correct, don't repeat trial.
+            if (data.score_an == 1){ 
+                return false; 
+            } else { 
+                return true; 
+            } 
+        }
+    }
+    // jatos.onLoad(() => {
+    // Define instructions
+    var instructions_01 = {
+      type: jsPsychInstructions,
+      pages: [
+        "<p>In this game you will see a grid of squares or 'tiles' that will flash blue one at a time.</p><p>Your goal is to remember the order in which the squares flashed blue.</p><p>At the end of each trial, click on the tiles that flashed in the <b>same order</b> as they were presented to you.</p>",
+        `<p>Do your best to memorize the order, but do not write them down<br>or use any other external tool to help you remember.</p><p>If you make a mistake, click the "Clear" button to erase your entries.</p><p>When you're ready, click "Next" to start a few practice trials.</p>`
+      ],
+      key_forward: 'ArrowRight',
+      key_backward: 'ArrowLeft',
+      allow_keys: true,
+      show_clickable_nav: true,
+      button_label_previous: 'Prev',
+      button_label_next: 'Next'
+    }
+
+    // This will store all of the sequences
+    let sequences_forward = [];
+
+    // This will store the sequence lengths
+    let sequenceLengths = [];
+
+
+    ////////for debug ////////
+
+    // for(let i = 2; i <= 3; i++) {
+    //   sequenceLengths.push(i);
+    // }
+
+    // // Loop over the sequence lengths
+    // for (let i = 0; i < sequenceLengths.length; i++) {
+    //     let length = sequenceLengths[i];
+
+    //     // For each sequence length, generate four sequences
+    //     for (let j = 0; j < 2; j++) {
+    //       sequences_forward.push({
+    //             sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], length)
+    //         });
+    //     }
+    // }
+
+
+    ///////////// for debug //////////
+
+    for(let i = 2; i <= 8; i++) {
+      sequenceLengths.push(i);
+    }
+
+    // Loop over the sequence lengths
+    for (let i = 0; i < sequenceLengths.length; i++) {
+        let length = sequenceLengths[i];
+
+        // For each sequence length, generate four sequences
+        for (let j = 0; j < 4; j++) {
+          sequences_forward.push({
+                sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], length)
+            });
+        }
+    }
+
+
+
+
+    /////////////////// Test trials ////////////////////
+
+    // Define forwards recall
+    var recall_forwards = {
+      timeline: [
+        {
+          type: jsPsychScreenCheck,
+          min_width: 258,
+          min_height: 364
+        },
+        {
+          type: jsPsychHtmlKeyboardResponse, // this is a fixation cross
+          stimulus: '<p style="font-size: 48px;">+</p>',
+          choices: 'NO_KEYS',
+          trial_duration: 1200,
+        },
+        {
+          type: jsPsychSpatialRecall,
+          grid_size: 4,
+          sequence: jsPsych.timelineVariable('sequence'),
+          backwards: false
+        }
+      ],
+      timeline_variables: sequences_forward //[ //seting up the trials 
+        // {sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 2)}, // one sequence with 2 stim
+        // {sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 3)}, // one sequence with 3 stim
+        // {sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 4)}, // one sequence with 4 stim
+      //]
+    }
+
+    // Define instructions
+    var instructions_02 = {
+      type: jsPsychInstructions,
+      pages: [
+        "Great job! please take a moment to rest. <br><br>When ready, for the following trials, please recall the order of squares in the <b>reverse order</b>."
+      ],
+      key_forward: 'ArrowRight',
+      key_backward: 'ArrowLeft',
+      allow_keys: true,
+      show_clickable_nav: true,
+      button_label_previous: 'Prev',
+      button_label_next: 'Next'
+    }
+
+    // This will store all of the sequences
+    let sequences_backward = [];
+
+    // This will store the sequence lengths
+    // let sequenceLengths = [];
+    // for(let i = 2; i <= 8; i++) {
+      // sequenceLengths.push(i);
+    // }
+
+
+    ////////// for debug ///////
+      
+    // // Loop over the sequence lengths
+    // for (let i = 0; i < sequenceLengths.length; i++) {
+    //     let length = sequenceLengths[i];
+
+    //     // For each sequence length, generate four sequences
+    //     for (let j = 0; j < 2; j++) {
+    //       sequences_backward.push({
+    //             sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], length)
+    //         });
+    //     }
+    // }
+    //////// for debug/////////
+
+    // Loop over the sequence lengths
+    for (let i = 0; i < sequenceLengths.length; i++) {
+      let length = sequenceLengths[i];
+
+      // For each sequence length, generate four sequences
+      for (let j = 0; j < 4; j++) {
+        sequences_backward.push({
+              sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], length)
+          });
+      }
+    }
+
+
+    // Define backwards recall
+    var recall_backwards = {
+      timeline: [
+        {
+          type: jsPsychScreenCheck,
+          min_width: 258,
+          min_height: 364
+        },
+        {
+          type: jsPsychHtmlKeyboardResponse, // this is a fixation cross
+          stimulus: '<p style="font-size: 48px;">+</p>',
+          choices: 'NO_KEYS',
+          trial_duration: 1200,
+        },
+        {
+          type: jsPsychSpatialRecall,
+          grid_size: 4,
+          sequence: jsPsych.timelineVariable('sequence'),
+          backwards: true
+        }
+      ],
+      timeline_variables: sequences_backward
+      // [
+        // {sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 2)},
+        // {sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 3)},
+        // {sequence: jsPsych.randomization.sampleWithoutReplacement([...Array(16).keys()], 4)},
+      // ]
+    }
+
+    // });
+
+    var instructions_01, recall_forwards, instructions_02, recall_backwards;
+
+    timeline = timeline.concat(welcome);
+    timeline = timeline.concat(instructions_01);
+    timeline = timeline.concat(practice_timeline);
+    // timeline = timeline.concat(practice_end_feedback);
+    timeline = timeline.concat(recall_forwards);
+    timeline = timeline.concat(instructions_02);
+    timeline = timeline.concat(recall_backwards);
+
+    
+  //   // console.log("Prolific ID: " + jatos.urlQueryParameters.prolificId);
+
+  
+      
+      // code to get Prolific info from URL: currently not working
+      // capture info from Prolific
+      // console.log(jatos.urlQueryParameters)
+      // let app_id = jatos.urlQueryParameters.APPID;//PROLIFIC_PID;
+      // let study_id = jatos.urlQueryParameters.STUDYID;
+      // // console.log(prolific_id)
+      
+
+      // jsPsych.data.addProperties({
+      //   app_id: app_id,
+      //   study_id: study_id,
+      // });
+
+      jatos.onLoad(() => {
+      console.log(jatos.urlQueryParameters.APPID);
+      jsPsych.data.addProperties({ start_time: (new Date()).toISOString(),
+      app_id: jatos.urlQueryParameters.APPID,
+      study_id: jatos.urlQueryParameters.STUDYID
+  });
+      jsPsych.run(timeline);
+      // jatos.endStudyAndRedirect("https://brown.co1.qualtrics.com/jfe/form/SV_4VmAWNCgNg9eO90?APPID=" +jatos.urlQueryParameters.APPID+ "&STUDYID=" + jatos.urlQueryParameters.STUDYID+ "");
+      });
+
+  </script>
+</html>

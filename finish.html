@@ -1,0 +1,129 @@
+
+
+
+<meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+     <script src="jatos.js"></script>
+     <!-- <script src="js/jquery.min.js"></script> -->
+
+
+
+<style>
+    @import url("all.css");
+#score_div{
+    position:absolute;
+    left: 0;
+    padding: 0;
+    border-radius: 5px;
+    width: 100%;
+    position: fixed;
+    font-size: 18px;
+    font-weight: 800;
+    top: calc(50% - 130px);
+    text-align: center;
+}
+.img_inst_con{
+    width: 170px;
+    height: 170px;
+    float: right;
+    margin:0 40px 0 40px;
+}
+.img_inst{
+    width: 100%;
+    height: 100%;
+}
+.container{
+    text-align: center;
+    max-width: 700px;
+    margin: auto;
+    font-family: arial;
+    position: relative;
+}
+ul{
+    font-size: 20px;
+    text-align: left;
+}
+p{
+    white-space: pre-wrap;
+}
+#feedback_textarea{
+    margin: 30px auto;
+    max-width: 100%;
+    width: 607px;
+    height: 151px;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.07);
+    border-color: -moz-use-text-color #FFFFFF #FFFFFF -moz-use-text-color;
+    border-image: none;
+    border-radius: 6px 6px 6px 6px;
+    border-style: none solid solid none;
+    border-width: medium 1px 1px medium;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 12%) inset;
+    color: #555555;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 1em;
+    line-height: 1.4em;
+    padding: 5px 8px;
+    transition: background-color 0.2s ease 0s;
+
+}
+#next_button_hide{
+display:none;
+visibility:hidden;
+}
+
+.finish_btn{
+        height: 2em;
+    font-family: 'Lato', sans-serif;
+    font-size: 24px;
+    border-radius: 2em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: none;
+    transition: background-color 1s ease-out;
+    background: #4bd51c82;
+    box-shadow: rgb(17 17 26 / 10%) 0px 8px 24px, rgb(17 17 26 / 10%) 0px 16px 56px, rgb(17 17 26 / 10%) 0px 24px 80px;
+    color: black;
+    font-weight: 500;
+    width: 12em;
+    position: absolute;
+    bottom: -4em;
+    transform: translate(-50%, -50%);
+    left: 50%;
+}
+</style>
+<div id="container1" class="container">
+<br><br><br>
+
+<h1>Thank you for completing the study!</h1><br>
+<div style="text-align:left"><p style="font-size: 22px;">
+Before we redirect you back to Prolific for your payment to be processed, we would appreciate your feedback (any problems in running the experiment, interesting/boring, time it took to complete etc.).</p>        
+<textarea id="feedback_textarea" placeholder="Type here"></textarea><br></div>
+<button class="btn btn-success finish_btn" onclick="atFinish()">Finish</button>
+</div>
+
+<script>
+//Eddie: added function to record the feedback & upload via JATOS
+atFinish = function(){
+    const fdbck_txt = document.getElementById("feedback_textarea");
+    const feedback = fdbck_txt.value;
+    const feedbackObject = { //to get to JSON
+        feedback_finish_screen: feedback
+    };
+    const feedbackJsonString = "["+JSON.stringify(feedbackObject)+"]"; //add [], consistent
+    jatos.appendResultData(feedbackJsonString); //uplodate data
+    jatos.endStudy();
+}
+
+</script>
+
+<!--<div style="text-align:left"><p style="font-size: 22px;">For your participation and performance, you will receive £5 from us.<br>-->
+<!--Before we redirect you back to Prolific for your payment to be processed, we would appreciate your feedback (any problems in running the experiment, interesting/boring, time it took to complete etc.).</p>        -->
+<!--<textarea id="feedback_textarea" placeholder="Type here"></textarea><br></div>-->
+<!--<button class="btn btn-success" onclick="submit_feedback()">Finish</button>-->
+<!--</div>-->
